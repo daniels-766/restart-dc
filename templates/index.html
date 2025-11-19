@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Control Panel VJR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background: #f0f0f0;
+        }
+        .container {
+            width: 1000px;
+            margin: auto;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #ddd;
+            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+        }
+        .active {
+            background: #2196f3;
+            color: white;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 0 10px 10px 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            margin-top: 15px;
+            padding: 10px;
+            font-family: monospace;
+        }
+        button {
+            padding: 10px 15px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0b7dda;
+        }
+    </style>
+
+    <script>
+        function switchTab(tab) {
+            document.getElementById("tab_status").style.display = (tab === 'status') ? 'block' : 'none';
+            document.getElementById("tab_restart").style.display = (tab === 'restart') ? 'block' : 'none';
+
+            document.getElementById("btn_status").classList.toggle("active", tab === 'status');
+            document.getElementById("btn_restart").classList.toggle("active", tab === 'restart');
+        }
+    </script>
+</head>
+<body onload="switchTab('{{ tab|default('status') }}')">
+
+<div class="container">
+
+    <div class="tabs">
+        <div id="btn_status" class="tab" onclick="switchTab('status')">Status VJR</div>
+        <div id="btn_restart" class="tab" onclick="switchTab('restart')">Restart VJR</div>
+    </div>
+
+    <div class="card">
+
+        <!-- TAB STATUS -->
+        <div id="tab_status">
+            <h2>Cek Status Service VJR</h2>
+            <form method="POST" action="/check">
+                <button type="submit">Cek Status</button>
+            </form>
+
+            {% if tab == 'status' and result %}
+                <textarea readonly>{{ result }}</textarea>
+            {% endif %}
+        </div>
+
+        <!-- TAB RESTART -->
+        <div id="tab_restart">
+            <h2>Restart Service VJR</h2>
+            <form method="POST" action="/restart">
+                <button type="submit">Restart VJR</button>
+            </form>
+
+            {% if tab == 'restart' and result %}
+                <textarea readonly>{{ result }}</textarea>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
